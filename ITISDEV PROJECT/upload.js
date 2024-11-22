@@ -32,6 +32,8 @@ const storage = multer.diskStorage({
     }
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 const upload = multer({ storage });
 
 // User Authentication Middleware (JWT)
@@ -122,7 +124,54 @@ app.get('/search', authenticateUser, async (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 27017;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+
+app.get('/generate-report', (req, res) => {
+    res.sendFile(path.join(__dirname, 'report.html'));
+});
+
+const PDFDocument = require('pdfkit');
+
+// Route to Generate PDF Report
+app.post('/generate-report', authenticateUser, async (req, res) => {
+    const { fields } = req.body;
+
+    // Fetch user's project data
+    const projects = await Document.find({ userId: req.user._id });
+
+    const doc = new PDFDocument();
+    const buffers = [];
+
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => {
+        const pdfData = Buffer.concat(buffers);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=project_report.pdf');
+        res.send(pdfData);
+    });
+
+    // PDF Content
+    doc.fontSize(16).text('Project Report', { align: 'center' });
+    doc.moveDown();
+
+    projects.forEach((project, index) => {
+        doc.fontSize(12).text(`Project ${index + 1}: ${project.title}`);
+        if (fields.includes('milestones')) {
+            doc.text(`Completed Milestones: ${project.milestones || 'N/A'}`);
+        }
+        if (fields.includes('budget')) {
+            doc.text(`Budget Usage: ${project.budget || 'N/A'}`);
+        }
+        if (fields.includes('tasks')) {
+            doc.text(`Pending Tasks: ${project.pendingTasks || 'N/A'}`);
+        }
+        doc.moveDown();
+    });
+
+    doc.end();
+});
+

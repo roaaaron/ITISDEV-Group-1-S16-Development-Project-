@@ -465,3 +465,40 @@ main {
 #searchResults ul li a:hover {
     text-decoration: underline;
 }
+
+.report-container {
+    display: flex;
+    gap: 20px;
+}
+
+.report-options, .report-preview {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.report-options {
+    max-width: 300px;
+}
+
+.report-preview {
+    flex-grow: 2;
+}
+
+#reportTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#reportTable th, #reportTable td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+h3 span#projectName {
+    font-weight: bold;
+    color: #333;
+}
