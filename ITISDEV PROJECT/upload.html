@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Storage</title>
+    <link rel="stylesheet" href="style.css"> 
+   <script defer src="storage.js"></script>
+</head>
+<body>
+     <div class="container">
+    <header>
+        <h1>FTRoa Construction</h1>
+        <nav>
+            <a href="index.html">Projects</a>
+            <a href="expenses.html">Expenses</a>
+            <a href="add.html">Add</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="upload.html" class="active">Upload</a>
+            <a href="#" id="logout">Logout</a>
+        </nav>
+    </header>
+
+
+    <!-- Upload Document Section -->
+    <section class="container">
+        <h2 class="section-title">Upload Document</h2>
+        <form id="uploadForm" enctype="multipart/form-data" class="form-container">
+            <input type="text" id="documentTitle" placeholder="Document Title" required class="form-input"><br>
+            <input type="text" id="tags" placeholder="Enter tags separated by commas" class="form-input"><br>
+            <input type="file" id="documentFile" required class="form-input"><br>
+            <button type="submit" class="form-button">Upload</button>
+        </form>
+    </section>
+
+    <!-- Search Documents Section -->
+    <section class="container">
+        <h2 class="section-title">Search Documents</h2>
+        <form id="searchForm" class="form-container">
+            <input type="text" id="searchQuery" placeholder="Search for documents" required class="form-input">
+            <button type="submit" class="form-button">Search</button>
+        </form>
+    </section>
+
+    <script>
+        let token = ''; // Store JWT token
+
+        // Upload form handler
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('documentTitle').value;
+            const tags = document.getElementById('tags').value;
+            const file = document.getElementById('documentFile').files[0];
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('tags', tags);
+            formData.append('file', file);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        // Search form handler
+        document.getElementById('searchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('searchQuery').value;
+
+            const response = await fetch(`/search?q=${query}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const result = await response.json();
+            console.log(result.documents);  // Display search results
+        });
+    </script>
+</body>
+</html>
