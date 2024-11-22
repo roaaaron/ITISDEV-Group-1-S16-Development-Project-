@@ -347,3 +347,121 @@ main {
     font-size: 14px;
     color: #5d4037;
 }
+
+
+/* Storage Page Styles */
+
+/* Upload Document Section */
+#uploadForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#uploadForm h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #8d6e63;
+    margin-bottom: 20px;
+}
+
+#uploadForm input, #uploadForm button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#uploadForm input[type="file"] {
+    padding: 5px;
+}
+
+#uploadForm button {
+    background-color: #8d6e63;
+    color: #fff;
+    cursor: pointer;
+}
+
+#uploadForm button:hover {
+    background-color: #6d4c41;
+}
+
+/* Search Documents Section */
+#searchForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin: 30px auto 0;
+}
+
+#searchForm h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #8d6e63;
+    margin-bottom: 20px;
+}
+
+#searchForm input, #searchForm button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#searchForm button {
+    background-color: #8d6e63;
+    color: #fff;
+    cursor: pointer;
+}
+
+#searchForm button:hover {
+    background-color: #6d4c41;
+}
+
+/* Document Search Results */
+#searchResults {
+    margin-top: 30px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#searchResults h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #4e342e;
+}
+
+#searchResults ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#searchResults ul li {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #5d4037;
+}
+
+#searchResults ul li a {
+    color: #8d6e63;
+    text-decoration: none;
+}
+
+#searchResults ul li a:hover {
+    text-decoration: underline;
+}
