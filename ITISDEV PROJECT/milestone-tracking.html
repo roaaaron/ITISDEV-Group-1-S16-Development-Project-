@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milestone Tracking</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="milestones.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FTRoa Construction</h1>
+            <nav>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="index.html">Projects</a>
+                <a href="milestone-tracking.html">Milestones</a>
+                <a href="expenses.html">Expenses</a>
+                <a href="add.html">Add</a>
+                <a href="upload.html" class="active">Upload</a>
+                <a href="#" id="logout">Logout</a>
+            </nav>
+        </header>
+        <main>
+            <section class="milestones">
+                <h2>Milestone Tracking</h2>
+                <label for="project-selector">Select Project:</label>
+                <select id="project-selector">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                <div id="milestone-container">
+                    <!-- Milestone cards will be dynamically generated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
