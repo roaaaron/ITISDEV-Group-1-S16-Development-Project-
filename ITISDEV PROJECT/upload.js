@@ -54,6 +54,7 @@ const authenticateUser = (req, res, next) => {
 const User = mongoose.model('User', new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: { type: String, enum: ['Admin', 'Viewer'], default: 'Viewer' }
 }));
 
 const Document = mongoose.model('Document', new mongoose.Schema({
