@@ -502,3 +502,108 @@ h3 span#projectName {
     font-weight: bold;
     color: #333;
 }
+
+
+/* Milestone Tracking */
+
+/* General container styles */
+.container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 1200px;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+nav a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+nav a.active {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+/* Milestone-specific styles */
+.milestones {
+    padding: 20px;
+}
+
+#project-selector {
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.milestone-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.milestone-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.milestone-card p {
+    margin: 5px 0;
+}
+
+/* Status badge styles */
+.milestone-card .green {
+    color: green;
+    font-weight: bold;
+}
+
+.milestone-card .yellow {
+    color: goldenrod;
+    font-weight: bold;
+}
+
+.milestone-card .red {
+    color: red;
+    font-weight: bold;
+}
+
+.milestone-card .gray {
+    color: gray;
+    font-weight: bold;
+}
+
+/* Dropdown styling */
+#project-selector {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #f9f9f9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .milestone-card {
+        font-size: 14px;
+    }
+
+    #project-selector {
+        width: 100%;
+    }
+}
