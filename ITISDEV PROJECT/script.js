@@ -131,34 +131,19 @@ function toggleUserRole(index, button) {
 
 // Function to confirm delete user
 function confirmDeleteUser(index) {
-    const confirmation = document.createElement("div");
-    confirmation.classList.add("confirmation-modal");
-    confirmation.innerHTML = `
-        <div class="confirmation-content">
-            <p>Are you sure about this?</p>
-            <button class="confirm-yes">Yes</button>
-            <button class="confirm-no">No</button>
-        </div>
-    `;
-
-    document.body.appendChild(confirmation);
-
-    confirmation.querySelector(".confirm-yes").addEventListener("click", () => {
+    const isConfirmed = confirm("Are you sure you want to delete this user?");
+    if (isConfirmed) {
         deleteUser(index);
-        document.body.removeChild(confirmation);
-    });
-
-    confirmation.querySelector(".confirm-no").addEventListener("click", () => {
-        document.body.removeChild(confirmation);
-    });
+    }
 }
 
 // Function to delete user
 function deleteUser(index) {
     users.splice(index, 1);
     localStorage.setItem("users", JSON.stringify(users));
-    renderUsers();
+    renderUsers(); 
 }
+
 
 // Call renderUsers on page load
 document.addEventListener("DOMContentLoaded", renderUsers);
