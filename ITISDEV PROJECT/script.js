@@ -67,12 +67,10 @@ if (!currentUser && authenticatedPages.some(page => window.location.href.include
 function renderUsers() {
     const userContainer = document.querySelector(".user-container");
 
-    // Clear existing content (if any)
     userContainer.innerHTML = `
         <h1 class="section-title">Users</h1>
     `;
 
-    // Generate user cards dynamically
     users.forEach((user, index) => {
         const userCard = document.createElement("div");
         userCard.classList.add("user-card");
@@ -89,7 +87,6 @@ function renderUsers() {
         userContainer.appendChild(userCard);
     });
 
-    // Add event listeners to toggle role buttons
     const toggleRoleButtons = document.querySelectorAll(".toggle-role-btn");
     toggleRoleButtons.forEach(button => {
         button.addEventListener("click", (e) => {
@@ -98,7 +95,6 @@ function renderUsers() {
         });
     });
 
-    // Add event listeners to delete user buttons
     const deleteUserButtons = document.querySelectorAll(".delete-user-btn");
     deleteUserButtons.forEach(button => {
         button.addEventListener("click", (e) => {
@@ -112,19 +108,16 @@ function renderUsers() {
 function toggleUserRole(index, button) {
     const user = users[index];
 
-    // Toggle role logic
     if (user.role === "Admin") {
         user.role = "Viewer";
-        button.textContent = "Set to Admin"; // Update button text
+        button.textContent = "Set to Admin";
     } else {
         user.role = "Admin";
-        button.textContent = "Set to Viewer"; // Update button text
+        button.textContent = "Set to Viewer"; 
     }
 
-    // Save updated users list to localStorage
     localStorage.setItem("users", JSON.stringify(users));
 
-    // Update role display dynamically
     const userRoleDisplay = button.previousElementSibling;
     userRoleDisplay.textContent = `Role: ${user.role}`;
 }
