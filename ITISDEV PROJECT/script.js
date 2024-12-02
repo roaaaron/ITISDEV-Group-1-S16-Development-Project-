@@ -1,6 +1,25 @@
 // Simulating a backend with localStorage
 const users = JSON.parse(localStorage.getItem("users")) || [];
 
+// Function to add an automatic admin 
+function ensureAdminUser() {
+    const adminExists = users.some(user => user.email === "admin@gmail.com");
+    
+    if (!adminExists) {
+        users.push({ 
+            name: "admin", 
+            email: "admin@gmail.com", 
+            password: "admin", 
+            role: "Admin" 
+        });
+        localStorage.setItem("users", JSON.stringify(users));
+        console.log("Admin user created: admin@gmail.com (password: admin)");
+    }
+}
+
+// Call ensureAdminUser on page load
+document.addEventListener("DOMContentLoaded", ensureAdminUser);
+
 // Sign-Up Functionality
 const signupForm = document.getElementById("signup-form");
 if (signupForm) {
@@ -142,14 +161,19 @@ function deleteUser(index) {
 document.addEventListener("DOMContentLoaded", renderUsers);
 
 document.addEventListener("DOMContentLoaded", () => {
-    const currentUserRole = localStorage.getItem("role") || "Viewer"; 
+    const currentUserRole = localStorage.getItem("role") || "Viewer";
 
-    const usersLink = document.querySelector('a[href="user-management.html"]');
+    const restrictedPages = ["add.html", "upload.html", "user-management.html"];
 
-    usersLink.addEventListener("click", (event) => {
-        if (currentUserRole !== "Admin") {
-            event.preventDefault();
-            showPopupMessage();
+    restrictedPages.forEach((page) => {
+        const restrictedLink = document.querySelector(`a[href="${page}"]`);
+        if (restrictedLink) {
+            restrictedLink.addEventListener("click", (event) => {
+                if (currentUserRole !== "Admin") {
+                    event.preventDefault();
+                    showPopupMessage();
+                }
+            });
         }
     });
 });
