@@ -12,6 +12,10 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
+//Imports Schemas
+const { User, Document, Milestone } = require('./schemas');
+
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,19 +54,6 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
-// Models
-const User = mongoose.model('User', new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ['Admin', 'Viewer'], default: 'Viewer' }
-}));
-
-const Document = mongoose.model('Document', new mongoose.Schema({
-    title: String,
-    tags: [String],
-    filePath: String,
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}));
 
 // Routes
 
@@ -124,11 +115,23 @@ app.get('/search', authenticateUser, async (req, res) => {
     res.json({ documents: results });
 });
 
+
 // Start the server
 const PORT = process.env.PORT || 27017;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+// app.post('/',
+//     (req, res) => {
+//         res.send("POST Request Called")
+//     })
+
+// app.listen(PORT,
+//         function (err) {
+//             if (err) console.log(err);
+//             console.log("Server listening on PORT", PORT);
+//         });
 
 
 app.get('/generate-report', (req, res) => {
