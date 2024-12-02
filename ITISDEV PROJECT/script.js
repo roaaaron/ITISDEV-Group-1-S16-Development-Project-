@@ -33,6 +33,7 @@ if (loginForm) {
         const user = users.find(user => user.email === email && user.password === password);
         if (user) {
             localStorage.setItem("currentUser", JSON.stringify(user));
+            localStorage.setItem("role", user.role);
             alert("Login Successful!");
             window.location.href = "index.html";
         } else {
@@ -40,6 +41,7 @@ if (loginForm) {
         }
     });
 }
+
 
 // Logout Functionality
 const logoutButton = document.getElementById("logout");
