@@ -12,19 +12,22 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-//Imports Schemas
-const { User, Document, Milestone } = require('./schemas');
-
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));  // Serve uploaded files
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,  serverSelectionTimeoutMS: 30000 })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
+
+// Imports Schemas
+const { User, Document, Milestone, Project } = require('./models/schemas');
+
+// Populate DB with Sample Data
+var projects_sample_json = require(__dirname + '/models/sample_data/projects.json')
+Project.insertMany(projects_sample_json)
 
 // Define storage settings for multer (file upload)
 const storage = multer.diskStorage({

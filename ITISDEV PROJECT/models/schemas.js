@@ -22,9 +22,9 @@ const milestoneSchema = new Schema ({
         required: true
     },
 
-    projectId: {
-        type: String,
-        required: true
+    projectId: { // References the project using projectId
+        type: Number,
+        required: true,
     },
     
     title: {
@@ -52,7 +52,7 @@ const Milestone = model('Milestone', milestoneSchema);
 
 
 const projectSchema = new Schema ({
-    id: {
+    projectId: {
         type: Number,
         unique: true,
         required: true,
@@ -65,7 +65,7 @@ const projectSchema = new Schema ({
 
     status: {
         type: String,
-        enum: ['Not Started', 'In Progress', 'Completed'],
+        enum: ['Not Started', 'In Progress', 'At Risk', 'Completed'],
         default: 'Not Started'
     },
 
