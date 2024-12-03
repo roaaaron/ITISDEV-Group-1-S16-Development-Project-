@@ -5,82 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Storage</title>
     <link rel="stylesheet" href="style.css"> 
-   <script defer src="storage.js"></script>
+    <script defer src="upload.js"></script>
 </head>
 <body>
-     <div class="container">
-    <header>
-        <h1>FTRoa Construction</h1>
-        <nav>
-            <a href="index.html">Projects</a>
-            <a href="expenses.html">Expenses</a>
-            <a href="add.html">Add</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="upload.html" class="active">Upload</a>
-            <a href="user-management.html">Users</a>
-            <a href="#" id="logout">Logout</a>
-        </nav>
-    </header>
+    <div class="container">
+        <header>
+            <h1>FTRoa Construction</h1>
+            <nav>
+                <a href="index.html">Projects</a>
+                <a href="expenses.html">Expenses</a>
+                <a href="add.html">Add</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="upload.html" class="active">Upload</a>
+                <a href="user-management.html">Users</a>
+                <a href="#" id="logout">Logout</a>
+            </nav>
+        </header>
 
+        <!-- Upload Document Section -->
+        <section class="container">
+            <h2 class="section-title">Upload Document</h2>
+            <form id="uploadForm" enctype="multipart/form-data" class="form-container">
+                <input type="text" id="documentTitle" placeholder="Document Title" required class="form-input"><br>
+                <input type="text" id="tags" placeholder="Enter tags separated by commas" class="form-input"><br>
+                <input type="file" id="documentFile" required class="form-input"><br>
+                <button type="submit" class="form-button">Upload</button>
+            </form>
+        </section>
 
-    <!-- Upload Document Section -->
-    <section class="container">
-        <h2 class="section-title">Upload Document</h2>
-        <form id="uploadForm" enctype="multipart/form-data" class="form-container">
-            <input type="text" id="documentTitle" placeholder="Document Title" required class="form-input"><br>
-            <input type="text" id="tags" placeholder="Enter tags separated by commas" class="form-input"><br>
-            <input type="file" id="documentFile" required class="form-input"><br>
-            <button type="submit" class="form-button">Upload</button>
-        </form>
-    </section>
+        <!-- Search Documents Section -->
+        <section class="container">
+            <h2 class="section-title">Search Documents</h2>
+            <form id="searchForm" class="form-container">
+                <input type="text" id="searchQuery" placeholder="Search for documents" required class="form-input">
+                <button type="submit" class="form-button">Search</button>
+            </form>
+            <div id="searchResults"></div>
+        </section>
 
-    <!-- Search Documents Section -->
-    <section class="container">
-        <h2 class="section-title">Search Documents</h2>
-        <form id="searchForm" class="form-container">
-            <input type="text" id="searchQuery" placeholder="Search for documents" required class="form-input">
-            <button type="submit" class="form-button">Search</button>
-        </form>
-    </section>
+        <script>
+            const token = localStorage.getItem('authToken'); // Assuming the JWT token is saved in localStorage
+            const searchResultsDiv = document.getElementById('searchResults');
 
-    <script>
-        let token = ''; // Store JWT token
+            // Upload form handler
+            document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('documentTitle').value;
+                const tags = document.getElementById('tags').value;
+                const file = document.getElementById('documentFile').files[0];
 
-        // Upload form handler
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('documentTitle').value;
-            const tags = document.getElementById('tags').value;
-            const file = document.getElementById('documentFile').files[0];
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('tags', tags);
+                formData.append('file', file);
 
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('tags', tags);
-            formData.append('file', file);
+                try {
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData,
+                    });
 
-            const response = await fetch('/upload', {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formData
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message); // Show success message
+                        searchDocuments(); // Update document list
+                    } else {
+                        alert(result.message || 'Failed to upload document!');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to upload document!');
+                }
             });
 
-            const result = await response.json();
-            alert(result.message);
-        });
-
-        // Search form handler
-        document.getElementById('searchForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const query = document.getElementById('searchQuery').value;
-
-            const response = await fetch(`/search?q=${query}`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
+            // Search form handler
+            document.getElementById('searchForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                searchDocuments();
             });
 
-            const result = await response.json();
-            console.log(result.documents);  // Display search results
-        });
-    </script>
+            // Search documents
+            async function searchDocuments() {
+                const query = document.getElementById('searchQuery').value;
+
+                try {
+                    const response = await fetch(`/search?q=${encodeURIComponent(query)}`, {
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        displaySearchResults(result.documents);
+                    } else {
+                        alert(result.message || 'Error fetching search results.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error fetching search results.');
+                }
+            }
+
+            // Display search results
+            function displaySearchResults(documents) {
+                searchResultsDiv.innerHTML = ''; // Clear previous results
+
+                if (documents.length === 0) {
+                    searchResultsDiv.innerHTML = '<p>No documents found.</p>';
+                } else {
+                    documents.forEach(doc => {
+                        const docElement = document.createElement('div');
+                        docElement.classList.add('doc-item');
+                        docElement.innerHTML = `
+                            <h3>${doc.title}</h3>
+                            <p><strong>Tags:</strong> ${doc.tags.join(', ')}</p>
+                            <p><strong>File:</strong> ${doc.filePath.split('/').pop()}</p>
+                        `;
+                        searchResultsDiv.appendChild(docElement);
+                    });
+                }
+            }
+        </script>
+    </div>
 </body>
 </html>
