@@ -17,7 +17,7 @@ const Document = mongoose.model('Document', new mongoose.Schema({
 
 const milestoneSchema = new Schema ({
     id: {
-        type: int, 
+        type: Number, 
         unique: true, 
         required: true
     },

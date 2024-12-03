@@ -36,8 +36,6 @@ const storage = multer.diskStorage({
     }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 const upload = multer({ storage });
 
 // User Authentication Middleware (JWT)
@@ -54,8 +52,50 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
+app.use(express.static(path.join(__dirname)));
 
 // Routes
+// feel free to re-arrange
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'signup.html'));
+});
+
+app.get('/index', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+app.get('/add', (req, res) => {
+    res.sendFile(path.join(__dirname, 'add.html'));
+});
+
+app.get('/expenses', (req, res) => {
+    res.sendFile(path.join(__dirname, 'expenses.html'));
+});
+
+app.get('/milestone-tracking', (req, res) => {
+    res.sendFile(path.join(__dirname, 'milestone-tracking.html'));
+});
+
+app.get('/report', (req, res) => {
+    res.sendFile(path.join(__dirname, 'report.html'));
+});
+
+app.get('/upload', (req, res) => {
+    res.sendFile(path.join(__dirname, 'upload.html'));
+});
+
+app.get('/user-management', (req, res) => {
+    res.sendFile(path.join(__dirname, 'user-management.html'));
+});
+
 
 // User Registration
 app.post('/register', async (req, res) => {
@@ -117,11 +157,12 @@ app.get('/search', authenticateUser, async (req, res) => {
 
 
 // Start the server
-const PORT = process.env.PORT || 27017;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+// Debugging
 // app.post('/',
 //     (req, res) => {
 //         res.send("POST Request Called")
