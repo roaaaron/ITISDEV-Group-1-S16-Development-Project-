@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Building A",
+        "status": "In Progress",
+        "completion": 45, 
+        "budgetStatus": "On Track",
+        "deadline": "2024-12-01"
+    },
+    {
+        "id": 2,
+        "name": "Building B",
+        "status": "At Risk",
+        "completion": 60,
+        "budgetStatus": "Over Budget",
+        "deadline": "2024-11-25"
+    },
+    {
+        "id": 3,
+        "name": "Building C",
+        "status": "Completed",
+        "completion": 100,
+        "budgetStatus": "Under Budget",
+        "deadline": "2024-10-15"
+    }
+]
