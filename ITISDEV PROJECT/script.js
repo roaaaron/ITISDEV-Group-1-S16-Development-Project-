@@ -191,3 +191,33 @@ function showPopupMessage() {
         document.body.removeChild(popup);
     });
 }
+
+//For expenses.html
+const expenses = [];
+const budget = 10000; // Example budget
+
+document.getElementById('expense-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const category = document.getElementById('category').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    expenses.push({ category, amount });
+    updateDashboard();
+    checkBudgetAlerts();
+});
+
+function updateDashboard() {
+    const totalSpending = expenses.reduce((total, expense) => total + expense.amount, 0);
+    const remainingBalance = budget - totalSpending;
+    document.getElementById('total-budget').textContent = `Total Budget: ${budget}`;
+    document.getElementById('total-spending').textContent = `Total Spending: ${totalSpending}`;
+    document.getElementById('remaining-balance').textContent = `Remaining Balance: ${remainingBalance}`;
+}
+
+function checkBudgetAlerts() {
+    const totalSpending = expenses.reduce((total, expense) => total + expense.amount, 0);
+    if (totalSpending >= budget) {
+        alert('Warning: You have exceeded the budget!');
+    } else if (totalSpending >= budget * 0.9) {
+        alert('Warning: You are approaching the budget limit!');
+    }
+}
