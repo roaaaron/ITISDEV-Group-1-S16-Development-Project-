@@ -1,20 +1,19 @@
+const express = require('express');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const dotenv = require('dotenv');
+const path = require('path');
 
-const documentSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    tags: { type: [String], default: [] },
-    filePath: { type: String, required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-}, { timestamps: true });
+// Load environment variables
+dotenv.config();
 
-<<<<<<< Updated upstream
-const Document = mongoose.model('Document', documentSchema);
-=======
 // Initialize Express app
 const app = express();
 
 //Imports Schemas
-const { User, Document, Milestone, Project } = require('./models/schemas');
+const { User, Document, Milestone } = require('./schemas');
 
 
 // Middleware
@@ -220,6 +219,4 @@ app.post('/generate-report', authenticateUser, async (req, res) => {
 
     doc.end();
 });
->>>>>>> Stashed changes
 
-module.exports = Document;
