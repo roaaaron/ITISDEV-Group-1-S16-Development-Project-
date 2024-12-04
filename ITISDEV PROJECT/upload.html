@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Storage</title>
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
     <script defer src="upload.js"></script>
 </head>
 <body>
@@ -12,101 +12,49 @@
         <header>
             <h1>FTRoa Construction</h1>
             <nav>
-                <a href="dashboard.html" class="active">Dashboard</a>
                 <a href="index.html">Projects</a>
-                <a href="milestone-tracking.html">Milestones</a>
                 <a href="expenses.html">Expenses</a>
                 <a href="add.html">Add</a>
+                <a href="dashboard.html">Dashboard</a>
                 <a href="upload.html" class="active">Upload</a>
-                <a href="report.html" class="active">Create Report</a>
                 <a href="user-management.html">Users</a>
                 <a href="#" id="logout">Logout</a>
             </nav>
         </header>
 
+        <!-- Loading Indicator -->
+        <div id="loading" style="display: none; text-align: center; margin: 20px;">
+            <p>Loading...</p>
+        </div>
+
         <!-- Upload Document Section -->
-        <section class="container">
-            <h2 class="section-title">Upload Document</h2>
-            <form id="uploadForm" enctype="multipart/form-data" class="form-container">
-                <input type="text" id="documentTitle" placeholder="Document Title" required class="form-input"><br>
-                <input type="text" id="tags" placeholder="Enter tags separated by commas" class="form-input"><br>
-                <input type="file" id="documentFile" required class="form-input"><br>
-                <button type="submit" class="form-button">Upload</button>
+        <section>
+            <h2>Upload Document</h2>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="text" id="documentTitle" placeholder="Document Title" required><br>
+                <input type="text" id="tags" placeholder="Enter tags separated by commas"><br>
+                <input type="file" id="documentFile" required><br>
+                <button type="submit">Upload</button>
             </form>
         </section>
 
         <!-- Search Documents Section -->
-        <section class="container">
-            <h2 class="section-title">Search Documents</h2>
-            <form id="searchForm" class="form-container">
-                <input type="text" id="searchQuery" placeholder="Search for documents" required class="form-input">
-                <button type="submit" class="form-button">Search</button>
+        <section>
+            <h2>Search Documents</h2>
+            <form id="searchForm">
+                <input type="text" id="searchQuery" placeholder="Search for documents" required>
+                <button type="submit">Search</button>
             </form>
             <div id="searchResults"></div>
         </section>
 
         <script>
-            const token = localStorage.getItem('authToken'); // Assuming the JWT token is saved in localStorage
+            const loadingIndicator = document.getElementById('loading');
             const searchResultsDiv = document.getElementById('searchResults');
 
-            // Upload form handler
-            document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = document.getElementById('documentTitle').value;
-                const tags = document.getElementById('tags').value;
-                const file = document.getElementById('documentFile').files[0];
-
-                const formData = new FormData();
-                formData.append('title', title);
-                formData.append('tags', tags);
-                formData.append('file', file);
-
-                try {
-                    const response = await fetch('/upload', {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                        body: formData,
-                    });
-
-                    const result = await response.json();
-                    if (response.ok) {
-                        alert(result.message); // Show success message
-                        searchDocuments(); // Update document list
-                    } else {
-                        alert(result.message || 'Failed to upload document!');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Failed to upload document!');
-                }
-            });
-
-            // Search form handler
-            document.getElementById('searchForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                searchDocuments();
-            });
-
-            // Search documents
-            async function searchDocuments() {
-                const query = document.getElementById('searchQuery').value;
-
-                try {
-                    const response = await fetch(`/search?q=${encodeURIComponent(query)}`, {
-                        method: 'GET',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                    });
-
-                    const result = await response.json();
-                    if (response.ok) {
-                        displaySearchResults(result.documents);
-                    } else {
-                        alert(result.message || 'Error fetching search results.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error fetching search results.');
-                }
+            // Toggle loading indicator
+            function toggleLoading(show) {
+                loadingIndicator.style.display = show ? 'block' : 'none';
             }
 
             // Display search results
@@ -114,19 +62,89 @@
                 searchResultsDiv.innerHTML = ''; // Clear previous results
 
                 if (documents.length === 0) {
-                    searchResultsDiv.innerHTML = '<p>No documents found.</p>';
+                    searchResultsDiv.innerHTML = `
+                        <div class="no-results">
+                            <p>No documents found. Try refining your search!</p>
+                        </div>`;
                 } else {
                     documents.forEach(doc => {
                         const docElement = document.createElement('div');
-                        docElement.classList.add('doc-item');
+                        docElement.classList.add('doc-card'); // Styled as a card
+
                         docElement.innerHTML = `
-                            <h3>${doc.title}</h3>
-                            <p><strong>Tags:</strong> ${doc.tags.join(', ')}</p>
-                            <p><strong>File:</strong> ${doc.filePath.split('/').pop()}</p>
-                        `;
+                            <div class="doc-header">
+                                <h3>${doc.title}</h3>
+                            </div>
+                            <div class="doc-body">
+                                <p><strong>Tags:</strong> ${doc.tags || 'None'}</p>
+                                <p><strong>Uploaded on:</strong> ${doc.uploadDate || 'Unknown'}</p>
+                            </div>
+                            <div class="doc-footer">
+                                <p><strong>File:</strong> ${doc.file || 'No file available'}</p>
+                            </div>`;
+                        
                         searchResultsDiv.appendChild(docElement);
                     });
                 }
+            }
+
+            // Upload form handler
+            document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                toggleLoading(true);
+
+                const title = document.getElementById('documentTitle').value.trim();
+                const tags = document.getElementById('tags').value.trim();
+                const fileInput = document.getElementById('documentFile');
+                const file = fileInput.files[0];
+
+                if (!title || !file) {
+                    alert('Title and document file are required!');
+                    toggleLoading(false);
+                    return;
+                }
+
+                // Prepare the document data
+                const documentData = {
+                    title,
+                    tags,
+                    file: file.name, // Store the file name
+                    uploadDate: new Date().toLocaleString(),
+                };
+
+                try {
+                    const storedDocuments = JSON.parse(localStorage.getItem('documents')) || [];
+                    storedDocuments.push(documentData);
+                    localStorage.setItem('documents', JSON.stringify(storedDocuments));
+
+                    alert('Document uploaded successfully!');
+                    searchDocuments(); // Refresh document list
+                    document.getElementById('uploadForm').reset(); // Reset form
+                } catch (error) {
+                    console.error('Error uploading document:', error);
+                    alert('Failed to upload document!');
+                } finally {
+                    toggleLoading(false);
+                }
+            });
+
+            // Search form handler
+            document.getElementById('searchForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                searchDocuments();
+            });
+
+            // Search documents from localStorage
+            function searchDocuments() {
+                const query = document.getElementById('searchQuery').value.toLowerCase();
+                const documents = JSON.parse(localStorage.getItem('documents')) || [];
+
+                const filteredDocuments = documents.filter(doc =>
+                    doc.title.toLowerCase().includes(query) ||
+                    (doc.tags && doc.tags.toLowerCase().includes(query))
+                );
+
+                displaySearchResults(filteredDocuments);
             }
         </script>
     </div>
