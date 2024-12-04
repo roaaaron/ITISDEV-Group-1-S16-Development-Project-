@@ -24,12 +24,12 @@
             </nav>
         </header>
 
-        <!-- Loading Indicator -->
+     
         <div id="loading" style="display: none; text-align: center; margin: 20px;">
             <p>Loading...</p>
         </div>
 
-        <!-- Upload Document Section -->
+        
         <section>
             <h2>Upload Document</h2>
             <form id="uploadForm" enctype="multipart/form-data">
@@ -40,7 +40,7 @@
             </form>
         </section>
 
-        <!-- Search Documents Section -->
+      
         <section>
             <h2>Search Documents</h2>
             <form id="searchForm">
@@ -54,14 +54,14 @@
             const loadingIndicator = document.getElementById('loading');
             const searchResultsDiv = document.getElementById('searchResults');
 
-            // Toggle loading indicator
+          
             function toggleLoading(show) {
                 loadingIndicator.style.display = show ? 'block' : 'none';
             }
 
-            // Display search results
+           
             function displaySearchResults(documents) {
-                searchResultsDiv.innerHTML = ''; // Clear previous results
+                searchResultsDiv.innerHTML = ''; 
 
                 if (documents.length === 0) {
                     searchResultsDiv.innerHTML = `
@@ -71,7 +71,7 @@
                 } else {
                     documents.forEach(doc => {
                         const docElement = document.createElement('div');
-                        docElement.classList.add('doc-card'); // Styled as a card
+                        docElement.classList.add('doc-card'); 
 
                         docElement.innerHTML = `
                             <div class="doc-header">
@@ -90,7 +90,7 @@
                 }
             }
 
-            // Upload form handler
+            
             document.getElementById('uploadForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 toggleLoading(true);
@@ -106,11 +106,10 @@
                     return;
                 }
 
-                // Prepare the document data
                 const documentData = {
                     title,
                     tags,
-                    file: file.name, // Store the file name
+                    file: file.name, 
                     uploadDate: new Date().toLocaleString(),
                 };
 
@@ -120,8 +119,8 @@
                     localStorage.setItem('documents', JSON.stringify(storedDocuments));
 
                     alert('Document uploaded successfully!');
-                    searchDocuments(); // Refresh document list
-                    document.getElementById('uploadForm').reset(); // Reset form
+                    searchDocuments(); 
+                    document.getElementById('uploadForm').reset(); 
                 } catch (error) {
                     console.error('Error uploading document:', error);
                     alert('Failed to upload document!');
@@ -130,13 +129,13 @@
                 }
             });
 
-            // Search form handler
+          
             document.getElementById('searchForm').addEventListener('submit', (e) => {
                 e.preventDefault();
                 searchDocuments();
             });
 
-            // Search documents from localStorage
+            
             function searchDocuments() {
                 const query = document.getElementById('searchQuery').value.toLowerCase();
                 const documents = JSON.parse(localStorage.getItem('documents')) || [];
