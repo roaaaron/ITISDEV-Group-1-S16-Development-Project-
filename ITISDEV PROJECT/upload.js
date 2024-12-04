@@ -141,7 +141,7 @@ app.get('/api/projects', async (req, res) => {
     }
 });
 
-app.get('/api/milestones/:projectId', async (req, res) => {
+app.get('/api/milestones/projectId', async (req, res) => {
     const { projectId } = req.params;
     console.log("Received projectId:", projectId, "Type:", typeof projectId);
 
