@@ -63,6 +63,16 @@ function fetchMilestonesByProjectId(projectId) {
     return milestones.filter((milestone) => milestone.projectId == projectId);
 }
 
+// Update milestone in localStorage
+function updateMilestone(milestoneId, updatedData) {
+    const index = milestones.findIndex((milestone) => milestone.id == milestoneId);
+    if (index !== -1) {
+        milestones[index] = { ...milestones[index], ...updatedData };
+        localStorage.setItem("milestones", JSON.stringify(milestones));
+        console.log(`Milestone ${milestoneId} updated:`, milestones[index]);
+    }
+}
+
 
 async function renderMilestones(projectId) {
     const container = document.getElementById("milestone-container");
@@ -87,10 +97,66 @@ async function renderMilestones(projectId) {
                 <p>Status: <span style="color:${statusColor}">${milestone.status}</span></p>
                 <p>Deadline: ${new Date(milestone.dueDate).toLocaleDateString()}</p>
                 <p>Description: ${milestone.description}</p>
+                <p>Comments: ${milestone.comments || "No comments added"}</p>
+                <button onclick="editMilestone(${milestone.id})">Edit</button>
             </div>
         `;
     });
 }
+
+// Edit milestone
+function editMilestone(milestoneId) {
+    const milestone = milestones.find((m) => m.id === milestoneId);
+
+    if (!milestone) {
+        alert("Milestone not found!");
+        return;
+    }
+
+    // Populate modal fields
+    document.getElementById("milestone-title").value = milestone.title;
+    document.getElementById("milestone-status").value = milestone.status;
+    document.getElementById("milestone-due-date").value = milestone.dueDate;
+    document.getElementById("milestone-comments").value = milestone.comments || "";
+
+    // Show modal
+    const modal = document.getElementById("edit-milestone-modal");
+    modal.style.display = "block";
+
+    // Save changes on form submita
+    const form = document.getElementById("edit-milestone-form");
+    form.onsubmit = function (event) {
+        event.preventDefault();
+
+        const updatedTitle = document.getElementById("milestone-title").value;
+        const updatedStatus = document.getElementById("milestone-status").value;
+        const updatedDueDate = document.getElementById("milestone-due-date").value;
+        const updatedComments = document.getElementById("milestone-comments").value;
+
+        updateMilestone(milestoneId, {
+            title: updatedTitle,
+            status: updatedStatus,
+            dueDate: updatedDueDate,
+            comments: updatedComments,
+        });
+
+        // Hide modal and re-render milestones
+        modal.style.display = "none";
+        renderMilestones(milestone.projectId);
+    };
+}
+
+    document.getElementById("close-modal").addEventListener("click", () => {
+        document.getElementById("edit-milestone-modal").style.display = "none";
+    });
+    
+    // Close Modal on Outside Click
+    window.addEventListener("click", (event) => {
+        const modal = document.getElementById("edit-milestone-modal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
 
 function populateProjectSelector(projects) {
     const selector = document.getElementById("project-selector");
@@ -121,6 +187,10 @@ function initializeMilestonePage() {
 
 // Run initialization on page load
 window.addEventListener("DOMContentLoaded", initializeMilestonePage);
+
+
+
+// OLD
 
 // async function fetchProjects() {
 //     try {

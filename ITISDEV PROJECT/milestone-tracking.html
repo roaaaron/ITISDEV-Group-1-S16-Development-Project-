@@ -36,5 +36,31 @@
             </section>
         </main>
     </div>
+
+    <div id="edit-milestone-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <h2>Edit Milestone</h2>
+            <form id="edit-milestone-form">
+                <label for="milestone-title">Title:</label>
+                <input type="text" id="milestone-title" required />
+    
+                <label for="milestone-status">Status:</label>
+                <select id="milestone-status" required>
+                    <option value="Not Started">Not Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+    
+                <label for="milestone-due-date">Due Date:</label>
+                <input type="date" id="milestone-due-date" required />
+
+                <label for="milestone-comments">Comments:</label>
+                <textarea id="milestone-comments"></textarea>
+    
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
