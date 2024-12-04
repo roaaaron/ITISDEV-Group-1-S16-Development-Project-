@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "projectId": 1,
+        "title": "Foundation Work",
+        "status": "In Progress",
+        "dueDate": "2024-12-05",
+        "description": "Complete the foundation work for Building A."
+    },
+    {
+        "id": 2,
+        "projectId": 1,
+        "title": "Roof Installation",
+        "status": "Not Started",
+        "dueDate": "2024-12-20",
+        "description": "Install the roof structure."
+    },
+    {
+        "id": 3,
+        "projectId": 2,
+        "title": "Interior Painting",
+        "status": "Not Started",
+        "dueDate": "2024-11-30",
+        "description": "Paint all interior walls for Building B."
+    }
+]

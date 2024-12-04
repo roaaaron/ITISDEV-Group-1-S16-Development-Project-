@@ -34,18 +34,26 @@ async function populateDatabase() {
     try {
         // Import sample data
         const projects_sample_json = require('./models/sample_data/projects.json');
+        const milestones_sample_json = require('./models/sample_data/milestones.json');
         // Debugging
-        console.log('Sample Data:', projects_sample_json);
-        console.log('Number of Documents:', projects_sample_json.length);
+        console.log('Sample Data:', milestones_sample_json);
+        console.log('Number of Documents:', milestones_sample_json.length);
 
-        // Check if data already exists
-        const existingDocuments = await Project.find({});
-        if (existingDocuments.length === 0) {
-            // Insert sample data if the collection is empty
+        const projectCount = await Project.countDocuments();
+        if (projectCount === 0) {
             await Project.insertMany(projects_sample_json);
-            console.log('Sample data inserted successfully.');
+            console.log('Project sample data inserted successfully.');
         } else {
-            console.log('Sample data already exists in the database. Skipping insertion.');
+            console.log('Project data already exists. Skipping insertion.');
+        }
+
+        // Check if milestone data exists
+        const milestoneCount = await Milestone.countDocuments();
+        if (milestoneCount === 0) {
+            await Milestone.insertMany(milestones_sample_json);
+            console.log('Milestone sample data inserted successfully.');
+        } else {
+            console.log('Milestone data already exists. Skipping insertion.');
         }
     } catch (err) {
         console.error('Error during database population:', err);
@@ -122,6 +130,24 @@ app.get('/user-management', (req, res) => {
     res.sendFile(path.join(__dirname, 'user-management.html'));
 });
 
+// Milestone Tracking
+app.get('/api/milestones/:projectId', async (req, res) => {
+    const { projectId } = req.params;
+
+    try {
+        // Fetch milestones for the given projectId
+        const milestones = await Milestone.find({ projectId });
+
+        if (milestones.length === 0) {
+            return res.status(404).json({ message: 'No milestones found for this project' });
+        }
+
+        res.json(milestones);
+    } catch (err) {
+        console.error('Error fetching milestones:', err);
+        res.status(500).json({ message: 'Error fetching milestones' });
+    }
+});
 
 // User Registration
 app.post('/register', async (req, res) => {
@@ -187,19 +213,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-// Debugging
-// app.post('/',
-//     (req, res) => {
-//         res.send("POST Request Called")
-//     })
-
-// app.listen(PORT,
-//         function (err) {
-//             if (err) console.log(err);
-//             console.log("Server listening on PORT", PORT);
-//         });
-
 
 app.get('/generate-report', (req, res) => {
     res.sendFile(path.join(__dirname, 'report.html'));
