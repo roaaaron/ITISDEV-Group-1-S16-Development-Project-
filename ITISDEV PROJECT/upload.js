@@ -19,20 +19,38 @@ app.use('/uploads', express.static('uploads'));  // Serve uploaded files
 
 
 // MongoDB Connection
-mongoose.connect("mongodb://localhost:27017/", {serverSelectionTimeoutMS: 30000 })
-    .then(() => console.log('MongoDB connected'))
+mongoose.connect("mongodb://localhost:27017/", {})
+    .then(() => {
+        console.log('MongoDB connected');
+        populateDatabase();
+    })
     .catch(err => console.log(err));
 
 // Imports Schemas
 const { User, Document, Milestone, Project } = require('./models/schemas');
 
-// Populate DB with Sample Data
-var projects_sample_json = require('./models/sample_data/projects.json')
-Project.insertMany(projects_sample_json)
+// Populates DB with sample data w dupe handling
+async function populateDatabase() {
+    try {
+        // Import sample data
+        const projects_sample_json = require('./models/sample_data/projects.json');
+        // Debugging
+        console.log('Sample Data:', projects_sample_json);
+        console.log('Number of Documents:', projects_sample_json.length);
 
-// Debugging
-console.log('Sample Data:', projects_sample_json);
-console.log('Number of Documents:', projects_sample_json.length);
+        // Check if data already exists
+        const existingDocuments = await Project.find({});
+        if (existingDocuments.length === 0) {
+            // Insert sample data if the collection is empty
+            await Project.insertMany(projects_sample_json);
+            console.log('Sample data inserted successfully.');
+        } else {
+            console.log('Sample data already exists in the database. Skipping insertion.');
+        }
+    } catch (err) {
+        console.error('Error during database population:', err);
+    }
+}
 
 // Define storage settings for multer (file upload)
 const storage = multer.diskStorage({
