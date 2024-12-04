@@ -35,9 +35,10 @@ async function populateDatabase() {
         // Import sample data
         const projects_sample_json = require('./models/sample_data/projects.json');
         const milestones_sample_json = require('./models/sample_data/milestones.json');
+        
         // Debugging
-        console.log('Sample Data:', milestones_sample_json);
-        console.log('Number of Documents:', milestones_sample_json.length);
+        // console.log('Sample Data:', milestones_sample_json);
+        // console.log('Number of Documents:', milestones_sample_json.length);
 
         const projectCount = await Project.countDocuments();
         if (projectCount === 0) {
