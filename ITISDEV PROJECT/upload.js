@@ -118,7 +118,7 @@ app.get('/milestone-tracking', (req, res) => {
     res.sendFile(path.join(__dirname, 'milestone-tracking.html'));
 });
 
-app.get('/report', (req, res) => {
+app.get('/generate-report', (req, res) => {
     res.sendFile(path.join(__dirname, 'report.html'));
 });
 
@@ -214,48 +214,85 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-app.get('/generate-report', (req, res) => {
-    res.sendFile(path.join(__dirname, 'report.html'));
-});
-
 const PDFDocument = require('pdfkit');
 
 // Route to Generate PDF Report
 app.post('/generate-report', authenticateUser, async (req, res) => {
-    const { fields } = req.body;
+    const { projectId, fields } = req.body;
 
-    // Fetch user's project data
-    const projects = await Document.find({ userId: req.user._id });
+    try {
+        // Fetch project details
+        const project = await Project.findOne({ projectId });
+        if (!project) return res.status(404).json({ message: 'Project not found' });
 
-    const doc = new PDFDocument();
-    const buffers = [];
+        // Fetch milestones related to the project
+        const milestones = await Milestone.find({ projectId });
 
-    doc.on('data', buffers.push.bind(buffers));
-    doc.on('end', () => {
-        const pdfData = Buffer.concat(buffers);
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=project_report.pdf');
-        res.send(pdfData);
-    });
+        // Create PDF
+        const PDFDocument = require('pdfkit');
+        const doc = new PDFDocument();
+        const buffers = [];
 
-    // PDF Content
-    doc.fontSize(16).text('Project Report', { align: 'center' });
-    doc.moveDown();
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => {
+            const pdfData = Buffer.concat(buffers);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename=project_report.pdf');
+            res.send(pdfData);
+        });
 
-    projects.forEach((project, index) => {
-        doc.fontSize(12).text(`Project ${index + 1}: ${project.title}`);
-        if (fields.includes('milestones')) {
-            doc.text(`Completed Milestones: ${project.milestones || 'N/A'}`);
-        }
-        if (fields.includes('budget')) {
-            doc.text(`Budget Usage: ${project.budget || 'N/A'}`);
-        }
-        if (fields.includes('tasks')) {
-            doc.text(`Pending Tasks: ${project.pendingTasks || 'N/A'}`);
-        }
+        // Add project details to PDF
+        doc.fontSize(16).text('Project Report', { align: 'center' });
         doc.moveDown();
-    });
+        doc.fontSize(12).text(`Project Name: ${project.name}`);
+        doc.text(`Status: ${project.status}`);
+        doc.text(`Completion: ${project.completion}%`);
+        doc.text(`Budget Status: ${project.budgetStatus}`);
+        doc.text(`Deadline: ${new Date(project.deadline).toLocaleDateString()}`);
+        doc.moveDown();
 
-    doc.end();
+        // Include milestones if requested
+        if (fields.includes('milestones')) {
+            doc.fontSize(14).text('Milestones:');
+            milestones.forEach((milestone, index) => {
+                doc.fontSize(12).text(
+                    `${index + 1}. ${milestone.title} - ${milestone.status} (Due: ${new Date(
+                        milestone.dueDate
+                    ).toLocaleDateString()})`
+                );
+            });
+            doc.moveDown();
+        }
+
+        doc.end();
+    } catch (err) {
+        console.error('Error generating report:', err);
+        res.status(500).json({ message: 'Error generating report' });
+    }
 });
+
+// Fetch all projects
+app.get('/api/projects', async (req, res) => {
+    try {
+        const projects = await Project.find();
+        res.json(projects);
+    } catch (err) {
+        console.error('Error fetching projects:', err);
+        res.status(500).json({ message: 'Error fetching projects' });
+    }
+});
+
+// Fetch milestones by projectId
+app.get('/api/milestones/:projectId', async (req, res) => {
+    const { projectId } = req.params;
+    try {
+        const milestones = await Milestone.find({ projectId });
+        res.json(milestones);
+    } catch (err) {
+        console.error('Error fetching milestones:', err);
+        res.status(500).json({ message: 'Error fetching milestones' });
+    }
+});
+
+
 

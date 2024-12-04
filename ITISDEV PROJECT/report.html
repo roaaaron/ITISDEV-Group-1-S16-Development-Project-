@@ -3,70 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Report</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="report.js"></script>
+    <title>Create Report - FTRoa Construction</title>
+    <script src="report.js" defer></script>
+    <style>
+        /* Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        nav a.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>FTRoa Construction</h1>
-            <nav>
-                <a href="index.html">Projects</a>
-                <a href="expenses.html">Expenses</a>
-                <a href="add.html">Add</a>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="upload.html">Upload</a>
-                <a href="report.html" class="active">Create Report</a>
-                <a href="user-management.html">Users</a>
-                <a href="#" id="logout">Logout</a>
-            </nav>
-        </header>
+    <!-- Header Section -->
+    <header>
+        <h1>FTRoa Construction</h1>
+        <nav>
+            <a href="index.html">Projects</a>
+            <a href="expenses.html">Expenses</a>
+            <a href="add.html">Add</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="upload.html">Upload</a>
+            <a href="report.html" class="active">Create Report</a>
+            <a href="#" id="logout">Logout</a>
+        </nav>
+    </header>
 
-        <section class="container">
-            <h2 class="section-title">Generate Report</h2>
-            <div class="report-container">
-                <!-- Left Column: Options -->
-                <div class="report-options">
-                    <h3>Select Project:</h3>
-                    <select id="projectSelect" class="form-input">
-                        <option value="buildingA">Building A</option>
-                        <option value="buildingB">Building B</option>
-                        <option value="buildingC">Building C</option>
-                    </select>
-                    
-                    <h3>Select Data to Include:</h3>
-                    <form id="reportForm">
-                        <label>
-                            <input type="checkbox" name="field" value="projectProgress"> Project Progress
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="field" value="budgetUtilization"> Budget Utilization
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="field" value="milestoneCompletion"> Milestone Completion
-                        </label><br>
-                        <button type="submit" class="form-button">Generate Report</button>
-                    </form>
-                </div>
+    <!-- Main Content -->
+    <main>
+        <h2>Create Project Report</h2>
 
-                <!-- Right Column: Preview -->
-                <div class="report-preview">
-                    <h3>Preview for <span id="projectName">[Select Project]</span></h3>
-                    <table id="reportTable">
-                        <thead>
-                            <tr>
-                                <th>Field</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Rows will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </div>
+        <!-- Project Selector -->
+        <label for="projectSelect">Select Project:</label>
+        <select id="projectSelect">
+            <option value="">-- Select a Project --</option>
+        </select>
+
+        <!-- Milestones Table -->
+        <h3>Milestones</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                </tr>
+            </thead>
+            <tbody id="milestoneTableBody">
+                <tr>
+                    <td colspan="4">Please select a project.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Field Selection -->
+        <h3>Fields to Include in Report</h3>
+        <div>
+            <label><input type="checkbox" class="fieldCheckbox" value="milestones"> Milestones</label>
+            <label><input type="checkbox" class="fieldCheckbox" value="budget"> Budget</label>
+            <label><input type="checkbox" class="fieldCheckbox" value="tasks"> Tasks</label>
+        </div>
+
+        <!-- Generate Report Button -->
+        <button id="generateReportButton">Generate Report</button>
+    </main>
 </body>
 </html>
