@@ -1,104 +1,77 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const projectSelect = document.getElementById('projectSelect');
-    const milestoneTableBody = document.getElementById('milestoneTableBody');
-    const generateReportButton = document.getElementById('generateReportButton');
-    const fieldCheckboxes = document.querySelectorAll('.fieldCheckbox');
+const projectData = {
+    buildingA: {
+        projectProgress: "85% of Building A is complete.",
+        budgetUtilization: "80% of the budget used for Building A.",
+        milestoneCompletion: "7 out of 10 milestones completed for Building A."
+    },
+    buildingB: {
+        projectProgress: "60% of Building B is complete.",
+        budgetUtilization: "50% of the budget used for Building B.",
+        milestoneCompletion: "4 out of 8 milestones completed for Building B."
+    },
+    buildingC: {
+        projectProgress: "40% of Building C is complete.",
+        budgetUtilization: "30% of the budget used for Building C.",
+        milestoneCompletion: "2 out of 6 milestones completed for Building C."
+    }
+};
 
-    // Fetch and populate projects
-    fetch('/api/projects')
-        .then(response => response.json())
-        .then(projects => {
-            projects.forEach(project => {
-                const option = document.createElement('option');
-                option.value = project.projectId;
-                option.textContent = project.name;
-                projectSelect.appendChild(option);
-            });
-        })
-        .catch(err => {
-            console.error('Error fetching projects:', err);
-            alert('Failed to fetch projects. Please try again later.');
-        });
+document.getElementById('reportForm').addEventListener('submit', (e) => {
+    e.preventDefault();
 
-    // Load milestones for selected project
-    projectSelect.addEventListener('change', () => {
-        const projectId = projectSelect.value;
+    const selectedProject = document.getElementById('projectSelect').value;
+    const selectedFields = Array.from(document.querySelectorAll('input[name="field"]:checked'))
+        .map((checkbox) => checkbox.value);
 
-        if (!projectId) {
-            milestoneTableBody.innerHTML = '<tr><td colspan="4">Please select a project.</td></tr>';
-            return;
-        }
+    // Update preview title
+    document.getElementById('projectName').textContent = 
+        selectedProject.replace('building', 'Building ');
 
-        fetch(`/api/milestones/${projectId}`)
-            .then(response => response.json())
-            .then(milestones => {
-                milestoneTableBody.innerHTML = ''; // Clear table body
-                if (milestones.length === 0) {
-                    milestoneTableBody.innerHTML = '<tr><td colspan="4">No milestones found for this project.</td></tr>';
-                } else {
-                    milestones.forEach((milestone, index) => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${milestone.title}</td>
-                            <td>${milestone.status}</td>
-                            <td>${new Date(milestone.dueDate).toLocaleDateString()}</td>
-                        `;
-                        milestoneTableBody.appendChild(row);
-                    });
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching milestones:', err);
-                alert('Failed to fetch milestones. Please try again later.');
-            });
+    // Clear previous table content
+    const tableBody = document.querySelector('#reportTable tbody');
+    tableBody.innerHTML = '';
+
+    // Populate table with selected fields for the chosen project
+    selectedFields.forEach((field) => {
+        const row = document.createElement('tr');
+        const fieldCell = document.createElement('td');
+        const detailCell = document.createElement('td');
+
+        fieldCell.textContent = field.replace(/([A-Z])/g, ' $1').trim(); // Format field name
+        detailCell.textContent = projectData[selectedProject][field];
+
+        row.appendChild(fieldCell);
+        row.appendChild(detailCell);
+        tableBody.appendChild(row);
     });
 
-    // Generate report
-    generateReportButton.addEventListener('click', () => {
-        const selectedFields = Array.from(fieldCheckboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value);
+    // Attach selected project and fields to download button
+    const downloadButton = document.getElementById('downloadPdf');
+    downloadButton.dataset.project = selectedProject;
+    downloadButton.dataset.fields = JSON.stringify(selectedFields);
+});
 
-        const projectId = projectSelect.value;
+// Save to PDF
+document.getElementById('downloadPdf').addEventListener('click', () => {
+    const selectedProject = document.getElementById('downloadPdf').dataset.project;
+    const selectedFields = JSON.parse(document.getElementById('downloadPdf').dataset.fields);
 
-        if (!projectId) {
-            alert('Please select a project.');
-            return;
-        }
-
-        if (selectedFields.length === 0) {
-            alert('Please select at least one field for the report.');
-            return;
-        }
-
-        fetch('/generate-report', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}` // Include JWT if applicable
-            },
-            body: JSON.stringify({ projectId, fields: selectedFields })
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.blob();
-                } else {
-                    throw new Error('Failed to generate report');
-                }
-            })
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'project_report.pdf';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            })
-            .catch(err => {
-                console.error('Error generating report:', err);
-                alert('Failed to generate report. Please try again later.');
-            });
-    });
+    fetch('/generate-report', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}` // Assuming JWT token is stored here
+        },
+        body: JSON.stringify({ project: selectedProject, fields: selectedFields })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'report.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(err => console.error(err));
 });
