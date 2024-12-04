@@ -131,23 +131,59 @@ app.get('/user-management', (req, res) => {
 });
 
 // Milestone Tracking
+app.get('/api/projects', async (req, res) => {
+    try {
+        const projects = await Project.find({});
+        res.json(projects);
+    } catch (err) {
+        console.error('Error fetching projects:', err);
+        res.status(500).json({ message: 'Error fetching projects' });
+    }
+});
+
 app.get('/api/milestones/:projectId', async (req, res) => {
     const { projectId } = req.params;
+    console.log("Received projectId:", projectId, "Type:", typeof projectId);
+
+    const projectIdNumber = Number(projectId);
+
+    if (isNaN(projectIdNumber)) {
+        console.error("Invalid projectId:", projectId);
+        return res.status(400).json({ message: "Invalid projectId format." });
+    }
 
     try {
-        // Fetch milestones for the given projectId
-        const milestones = await Milestone.find({ projectId });
+        const milestones = await Milestone.find({ projectId: projectIdNumber });
 
         if (milestones.length === 0) {
-            return res.status(404).json({ message: 'No milestones found for this project' });
+            return res.status(404).json({ message: "No milestones found for this project." });
         }
 
         res.json(milestones);
     } catch (err) {
-        console.error('Error fetching milestones:', err);
-        res.status(500).json({ message: 'Error fetching milestones' });
+        console.error("Error fetching milestones:", err);
+        res.status(500).json({ message: "Error fetching milestones." });
     }
 });
+
+
+// app.get('/api/milestones/:projectId', async (req, res) => {
+//     const { projectId } = req.params;
+
+//     try {
+//         // Fetch milestones for the given projectId
+//         const milestones = await Milestone.find({ projectId });
+
+//         if (milestones.length === 0) {
+//             return res.status(404).json({ message: 'No milestones found for this project' });
+//         }
+
+//         res.json(milestones);
+//     } catch (err) {
+//         console.error('Error fetching milestones:', err);
+//         res.status(500).json({ message: 'Error fetching milestones' });
+//     }
+// });
 
 // User Registration
 app.post('/register', async (req, res) => {
