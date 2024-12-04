@@ -17,8 +17,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));  // Serve uploaded files
 
+
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,  serverSelectionTimeoutMS: 30000 })
+mongoose.connect("mongodb://localhost:27017/", {serverSelectionTimeoutMS: 30000 })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
@@ -26,8 +27,12 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 const { User, Document, Milestone, Project } = require('./models/schemas');
 
 // Populate DB with Sample Data
-var projects_sample_json = require(__dirname + '/models/sample_data/projects.json')
+var projects_sample_json = require('./models/sample_data/projects.json')
 Project.insertMany(projects_sample_json)
+
+// Debugging
+console.log('Sample Data:', projects_sample_json);
+console.log('Number of Documents:', projects_sample_json.length);
 
 // Define storage settings for multer (file upload)
 const storage = multer.diskStorage({
