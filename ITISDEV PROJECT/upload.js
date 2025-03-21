@@ -18,7 +18,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         tags: tagsArray,
         filePath: file.path,
         userId: req.user._id
-    });
+    };
 
     await newDocument.save();
     res.json({ message: 'File uploaded successfully!' });
