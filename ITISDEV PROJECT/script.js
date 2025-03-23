@@ -221,3 +221,102 @@ function checkBudgetAlerts() {
         alert('Warning: You are approaching the budget limit!');
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Ensure audit logs script is loaded
+    if (typeof logAuditTrail !== "function") {
+        console.error("Audit logging script not loaded!");
+        return;
+    }
+
+    // Log User Login
+    document.getElementById("login-form")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        
+        try {
+            // Replace with actual login authentication logic
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password: document.getElementById("password").value })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                sessionStorage.setItem("currentUserId", data.userId);
+                logAuditTrail("User Login", `User '${username}' logged in.`);
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Invalid login credentials.");
+            }
+        } catch (err) {
+            console.error("Login error:", err);
+        }
+    });
+
+    // Log File Upload
+    document.getElementById("uploadForm")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const file = document.getElementById("documentFile").files[0];
+        if (!file) return;
+        
+        logAuditTrail("File Upload", `Uploaded file: ${file.name}`);
+        
+        // Continue with file upload process
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("title", document.getElementById("documentTitle").value);
+
+        try {
+            await fetch("/api/upload", { method: "POST", body: formData });
+            alert("File uploaded successfully!");
+        } catch (err) {
+            console.error("Upload error:", err);
+        }
+    });
+
+    // Log Document Search
+    document.getElementById("searchForm")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const query = document.getElementById("searchQuery").value.trim();
+        if (!query) return;
+
+        logAuditTrail("Document Search", `Search query: '${query}'`);
+
+        // Fetch search results
+        try {
+            const res = await fetch(`/search?q=${query}`);
+            const data = await res.json();
+            console.log("Search results:", data.documents);
+        } catch (err) {
+            console.error("Search error:", err);
+        }
+    });
+
+    // Log Report Generation
+    document.getElementById("generateReport")?.addEventListener("click", async () => {
+        logAuditTrail("Report Generation", "User generated a report.");
+        
+        try {
+            await fetch("/generate-report", { method: "POST" });
+            alert("Report generated successfully!");
+        } catch (err) {
+            console.error("Report generation error:", err);
+        }
+    });
+
+    // Log Navigation
+    document.querySelectorAll("nav a").forEach(link => {
+        link.addEventListener("click", (e) => {
+            logAuditTrail("Navigation", `User navigated to '${e.target.innerText}' page.`);
+        });
+    });
+
+    // Log Logout
+    document.getElementById("logout")?.addEventListener("click", async () => {
+        logAuditTrail("User Logout", "User logged out.");
+        sessionStorage.removeItem("currentUserId");
+        window.location.href = "login.html";
+    });
+});
