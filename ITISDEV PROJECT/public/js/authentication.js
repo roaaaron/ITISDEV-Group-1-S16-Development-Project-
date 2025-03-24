@@ -13,21 +13,6 @@ function signUp() {
 
                     user.sendEmailVerification()
                         .then(() => {
-                            // window.db.collection("users").add({
-                            //     name: name,
-                            //     email: email,
-                            //     role: "Viewer",
-                            //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            //     verified: false
-                            // })
-                            // .then((docRef) => {
-                            //     console.log("Document added with ID: ", docRef.id);
-                            //     alert("User added successfully!");
-                            // })
-                            // .catch((error) => {
-                            //     console.error("Error adding document: ", error);
-                            // });
-
                             alert("A verification email has been sent. Please check your inbox.");
                             window.location.href = "login.html";
                         })
