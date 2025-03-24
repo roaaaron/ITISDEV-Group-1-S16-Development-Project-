@@ -11,3 +11,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+// Initialize reCAPTCHA for MFA
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+  size: "invisible",
+  callback: (response) => {
+      console.log("reCAPTCHA verified!", response);
+  },
+  "expired-callback": () => {
+      console.log("reCAPTCHA expired. Refreshing...");
+  }
+});

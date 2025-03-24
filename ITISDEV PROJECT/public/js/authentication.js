@@ -1,4 +1,3 @@
-//takes form input and tries using it to register a new user
 function signUp() {
     const signupForm = document.getElementById("signup-form");
     if (signupForm) {
@@ -8,18 +7,29 @@ function signUp() {
             const password = document.getElementById("signup-password").value;
 
             firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    alert("Sign-Up Successful! Please Login.");
-                    window.location.href = "login.html";
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // Send Email Verification
+                    user.sendEmailVerification()
+                        .then(() => {
+                            alert("A verification email has been sent. Please check your inbox.");
+                            window.location.href = "login.html";
+                        })
+                        .catch((error) => {
+                            console.error("Error sending verification email:", error);
+                            alert("Error: " + error.message);
+                        });
                 })
                 .catch((error) => {
+                    console.error("Sign-up error:", error);
                     alert(error.message);
                 });
         });
     }
 }
 
-//takes form input and tries logging into the app
+
 function signIn() {
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
@@ -29,9 +39,16 @@ function signIn() {
             const password = document.getElementById("login-password").value;
 
             firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    alert("Login Successful!");
-                    window.location.href = "index.html";
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    if (!user.emailVerified) {
+                        alert("Please verify your email before logging in.");
+                        firebase.auth().signOut(); // Prevent login
+                    } else {
+                        alert("Login Successful!");
+                        window.location.href = "index.html";
+                    }
                 })
                 .catch(() => {
                     alert("Invalid Email or Password. Please try again.");
@@ -40,7 +57,8 @@ function signIn() {
     }
 }
 
-// Run both functions on page load
+
+// Run functions on page load
 window.onload = () => {
     signUp();
     signIn();
