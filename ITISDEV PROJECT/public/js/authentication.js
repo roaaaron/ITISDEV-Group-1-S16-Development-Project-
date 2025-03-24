@@ -10,7 +10,6 @@ function signUp() {
                 .then((userCredential) => {
                     const user = userCredential.user;
 
-                    // Send Email Verification
                     user.sendEmailVerification()
                         .then(() => {
                             alert("A verification email has been sent. Please check your inbox.");
@@ -44,7 +43,7 @@ function signIn() {
 
                     if (!user.emailVerified) {
                         alert("Please verify your email before logging in.");
-                        firebase.auth().signOut(); // Prevent login
+                        firebase.auth().signOut();
                     } else {
                         alert("Login Successful!");
                         window.location.href = "index.html";
@@ -57,8 +56,35 @@ function signIn() {
     }
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutButton = document.getElementById("logout");
 
-// Run functions on page load
+    if (logoutButton) {
+        logoutButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            logOut();
+        });
+    }
+});
+
+function logOut() {
+    firebase.auth().signOut().then(() => {
+        alert("You have been logged out.");
+        window.location.href = "login.html";
+    }).catch((error) => {
+        console.error("Logout Error:", error);
+    });
+}
+
+function checkAuthStatus() {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+            window.location.href = "login.html";
+            alert("You must be logged in to access this page.");
+        }
+    });
+}
+
 window.onload = () => {
     signUp();
     signIn();

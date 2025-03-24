@@ -30,14 +30,6 @@ if (logoutButton) {
     });
 }
 
-// Redirect to login if not authenticated
-const authenticatedPages = ["index.html", "expenses.html", "add.html"];
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-if (!currentUser && authenticatedPages.some(page => window.location.href.includes(page))) {
-    alert("You must be logged in to access this page.");
-    window.location.href = "login.html";
-}
-
 //For user-management.html
 
 // Function to render user cards dynamically
