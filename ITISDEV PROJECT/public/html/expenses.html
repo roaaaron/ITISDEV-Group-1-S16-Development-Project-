@@ -1,68 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FTRoa Project Tracker - Expenses</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <script defer src="../js/script.js"></script>
-</head>
-<body>
-<div class="container">
-    <header>
-        <h1>FTRoa Construction</h1>
-        <nav>
-            <a href="dashboard.html">Dashboard</a>
-                <a href="index.html">Projects</a>
-                <a href="milestone-tracking.html">Milestones</a>
-                <a href="expenses.html" class="active">Expenses</a>
-                <a href="add.html">Add</a>
-                <a href="upload.html">Upload</a>
-                <a href="report.html">Create Report</a>
-                <a href="user-management.html">Users</a>
-                <a href="#" id="logout">Logout</a>
-        </nav>
-    </header>
-    <main>
-        <div class="project-detail">
-            <h2>Project Title</h2>
-            <p>Date</p>
-            <div class="status-indicators">
-                <span class="red"></span>
-                <span class="yellow"></span>
-                <span class="green"></span>
-            </div>
-            <p class="description">
-                This project aims to [briefly state the main objective, e.g., "develop a user-friendly mobile app for financial tracking"]. By leveraging [mention relevant technologies, tools, or frameworks], the project will address [highlight the key problem or need].
-            </p>
-            <div class="expenses">
-                <ol>
-                    <li>Concrete <span class="cost">--- 999.00</span></li>
-                    <li>Steel <span class="cost">--- 999.00</span></li>
-                    <li>Brick and Block <span class="cost">--- 999.00</span></li>
-                    <li>Wood <span class="cost">--- 999.00</span></li>
-                    <li>Glass <span class="cost">--- 999.00</span></li>
-                </ol>
-                <p class="total">Total = 4996.00</p>
-            </div>
-            <form id="expense-form">
-                <label for="category">Category:</label>
-                <select id="category" name="category">
-                    <option value="labor">Labor</option>
-                    <option value="materials">Materials</option>
-                    <option value="equipment">Equipment</option>
-                </select>
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" name="amount" required>
-                <button type="submit">Add Expense</button>
-            </form>
-            <div id="budget-summary">
-                <p id="total-budget">Total Budget: 10000</p>
-                <p id="total-spending">Total Spending: 0</p>
-                <p id="remaining-balance">Remaining Balance: 10000</p>
-            </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FTRoa Project Tracker - Expenses</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <script defer src="../js/script.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>FTRoa Construction</h1>
+                <nav>
+                    <a href="dashboard.html">Dashboard</a>
+                        <a href="index.html">Projects</a>
+                        <a href="milestone-tracking.html">Milestones</a>
+                        <a href="expenses.html" class="active">Expenses</a>
+                        <a href="add.html">Add</a>
+                        <a href="upload.html">Upload</a>
+                        <a href="report.html">Create Report</a>
+                        <a href="user-management.html">Users</a>
+                        <a href="#" id="logout">Logout</a>
+                </nav>
+            </header>
+            <main>
+                <div class="project-detail">
+                    <h2>Project Title</h2>
+                    <p>Date</p>
+                    <div class="status-indicators">
+                        <span class="red"></span>
+                        <span class="yellow"></span>
+                        <span class="green"></span>
+                    </div>
+                    <p class="description">
+                        This project aims to [briefly state the main objective, e.g., "develop a user-friendly mobile app for financial tracking"]. By leveraging [mention relevant technologies, tools, or frameworks], the project will address [highlight the key problem or need].
+                    </p>
+                    <div class="expenses">
+                        <ol>
+                            <li>Concrete <span class="cost">--- 999.00</span></li>
+                            <li>Steel <span class="cost">--- 999.00</span></li>
+                            <li>Brick and Block <span class="cost">--- 999.00</span></li>
+                            <li>Wood <span class="cost">--- 999.00</span></li>
+                            <li>Glass <span class="cost">--- 999.00</span></li>
+                        </ol>
+                        <p class="total">Total = 4996.00</p>
+                    </div>
+                    <form id="expense-form">
+                        <label for="category">Category:</label>
+                        <select id="category" name="category">
+                            <option value="labor">Labor</option>
+                            <option value="materials">Materials</option>
+                            <option value="equipment">Equipment</option>
+                        </select>
+                        <label for="amount">Amount:</label>
+                        <input type="number" id="amount" name="amount" required>
+                        <button type="submit">Add Expense</button>
+                    </form>
+                    <div id="budget-summary">
+                        <p id="total-budget">Total Budget: 10000</p>
+                        <p id="total-spending">Total Spending: 0</p>
+                        <p id="remaining-balance">Remaining Balance: 10000</p>
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
-</div>
-</body>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="../js/firebase-config.js"></script>
+        <script src="../js/authentication.js"></script>
+        <script>checkAuthStatus();</script>
+    </body>
 </html>

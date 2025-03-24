@@ -3,6 +3,7 @@ function signUp() {
     if (signupForm) {
         signupForm.addEventListener("submit", (e) => {
             e.preventDefault();
+            const name = document.getElementById("signup-name").value;
             const email = document.getElementById("signup-email").value.trim();
             const password = document.getElementById("signup-password").value;
 
@@ -12,6 +13,21 @@ function signUp() {
 
                     user.sendEmailVerification()
                         .then(() => {
+                            // window.db.collection("users").add({
+                            //     name: name,
+                            //     email: email,
+                            //     role: "Viewer",
+                            //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            //     verified: false
+                            // })
+                            // .then((docRef) => {
+                            //     console.log("Document added with ID: ", docRef.id);
+                            //     alert("User added successfully!");
+                            // })
+                            // .catch((error) => {
+                            //     console.error("Error adding document: ", error);
+                            // });
+
                             alert("A verification email has been sent. Please check your inbox.");
                             window.location.href = "login.html";
                         })
@@ -28,8 +44,7 @@ function signUp() {
     }
 }
 
-
-function signIn() {
+async function signIn() {
     const loginForm = document.getElementById("login-form");
     if (loginForm) {
         loginForm.addEventListener("submit", (e) => {

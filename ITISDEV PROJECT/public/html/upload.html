@@ -1,153 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Storage</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <script defer src="../js/upload.js"></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>FTRoa Construction</h1>
-            <nav>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="index.html">Projects</a>
-                <a href="milestone-tracking.html">Milestones</a>
-                <a href="expenses.html">Expenses</a>
-                <a href="add.html">Add</a>
-                <a href="upload.html" class="active">Upload</a>
-                <a href="report.html">Create Report</a>
-                <a href="user-management.html">Users</a>
-                <a href="#" id="logout">Logout</a>
-            </nav>
-        </header>
-
-     
-        <div id="loading" style="display: none; text-align: center; margin: 20px;">
-            <p>Loading...</p>
-        </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document Storage</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <script defer src="../js/upload.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>FTRoa Construction</h1>
+                <nav>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="index.html">Projects</a>
+                    <a href="milestone-tracking.html">Milestones</a>
+                    <a href="expenses.html">Expenses</a>
+                    <a href="add.html">Add</a>
+                    <a href="upload.html" class="active">Upload</a>
+                    <a href="report.html">Create Report</a>
+                    <a href="user-management.html">Users</a>
+                    <a href="#" id="logout">Logout</a>
+                </nav>
+            </header>
 
         
-        <section>
-            <h2>Upload Document</h2>
-            <form id="uploadForm" enctype="multipart/form-data">
-                <input type="text" id="documentTitle" placeholder="Document Title" required><br>
-                <input type="text" id="tags" placeholder="Enter tags separated by commas"><br>
-                <input type="file" id="documentFile" required><br>
-                <button type="submit">Upload</button>
-            </form>
-        </section>
+            <div id="loading" style="display: none; text-align: center; margin: 20px;">
+                <p>Loading...</p>
+            </div>
 
-      
-        <section>
-            <h2>Search Documents</h2>
-            <form id="searchForm">
-                <input type="text" id="searchQuery" placeholder="Search for documents" required>
-                <button type="submit">Search</button>
-            </form>
-            <div id="searchResults"></div>
-        </section>
+            
+            <section>
+                <h2>Upload Document</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="text" id="documentTitle" placeholder="Document Title" required><br>
+                    <input type="text" id="tags" placeholder="Enter tags separated by commas"><br>
+                    <input type="file" id="documentFile" required><br>
+                    <button type="submit">Upload</button>
+                </form>
+            </section>
 
-        <script>
-            const loadingIndicator = document.getElementById('loading');
-            const searchResultsDiv = document.getElementById('searchResults');
+        
+            <section>
+                <h2>Search Documents</h2>
+                <form id="searchForm">
+                    <input type="text" id="searchQuery" placeholder="Search for documents" required>
+                    <button type="submit">Search</button>
+                </form>
+                <div id="searchResults"></div>
+            </section>
 
-          
-            function toggleLoading(show) {
-                loadingIndicator.style.display = show ? 'block' : 'none';
-            }
+            <script>
+                const loadingIndicator = document.getElementById('loading');
+                const searchResultsDiv = document.getElementById('searchResults');
 
-           
-            function displaySearchResults(documents) {
-                searchResultsDiv.innerHTML = ''; 
+            
+                function toggleLoading(show) {
+                    loadingIndicator.style.display = show ? 'block' : 'none';
+                }
 
-                if (documents.length === 0) {
-                    searchResultsDiv.innerHTML = `
-                        <div class="no-results">
-                            <p>No documents found. Try refining your search!</p>
-                        </div>`;
-                } else {
-                    documents.forEach(doc => {
-                        const docElement = document.createElement('div');
-                        docElement.classList.add('doc-card'); 
+            
+                function displaySearchResults(documents) {
+                    searchResultsDiv.innerHTML = ''; 
 
-                        docElement.innerHTML = `
-                            <div class="doc-header">
-                                <h3>${doc.title}</h3>
-                            </div>
-                            <div class="doc-body">
-                                <p><strong>Tags:</strong> ${doc.tags || 'None'}</p>
-                                <p><strong>Uploaded on:</strong> ${doc.uploadDate || 'Unknown'}</p>
-                            </div>
-                            <div class="doc-footer">
-                                <p><strong>File:</strong> ${doc.file || 'No file available'}</p>
+                    if (documents.length === 0) {
+                        searchResultsDiv.innerHTML = `
+                            <div class="no-results">
+                                <p>No documents found. Try refining your search!</p>
                             </div>`;
-                        
-                        searchResultsDiv.appendChild(docElement);
-                    });
+                    } else {
+                        documents.forEach(doc => {
+                            const docElement = document.createElement('div');
+                            docElement.classList.add('doc-card'); 
+
+                            docElement.innerHTML = `
+                                <div class="doc-header">
+                                    <h3>${doc.title}</h3>
+                                </div>
+                                <div class="doc-body">
+                                    <p><strong>Tags:</strong> ${doc.tags || 'None'}</p>
+                                    <p><strong>Uploaded on:</strong> ${doc.uploadDate || 'Unknown'}</p>
+                                </div>
+                                <div class="doc-footer">
+                                    <p><strong>File:</strong> ${doc.file || 'No file available'}</p>
+                                </div>`;
+                            
+                            searchResultsDiv.appendChild(docElement);
+                        });
+                    }
                 }
-            }
+
+                
+                document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    toggleLoading(true);
+
+                    const title = document.getElementById('documentTitle').value.trim();
+                    const tags = document.getElementById('tags').value.trim();
+                    const fileInput = document.getElementById('documentFile');
+                    const file = fileInput.files[0];
+
+                    if (!title || !file) {
+                        alert('Title and document file are required!');
+                        toggleLoading(false);
+                        return;
+                    }
+
+                    const documentData = {
+                        title,
+                        tags,
+                        file: file.name, 
+                        uploadDate: new Date().toLocaleString(),
+                    };
+
+                    try {
+                        const storedDocuments = JSON.parse(localStorage.getItem('documents')) || [];
+                        storedDocuments.push(documentData);
+                        localStorage.setItem('documents', JSON.stringify(storedDocuments));
+
+                        alert('Document uploaded successfully!');
+                        searchDocuments(); 
+                        document.getElementById('uploadForm').reset(); 
+                    } catch (error) {
+                        console.error('Error uploading document:', error);
+                        alert('Failed to upload document!');
+                    } finally {
+                        toggleLoading(false);
+                    }
+                });
 
             
-            document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                toggleLoading(true);
+                document.getElementById('searchForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    searchDocuments();
+                });
 
-                const title = document.getElementById('documentTitle').value.trim();
-                const tags = document.getElementById('tags').value.trim();
-                const fileInput = document.getElementById('documentFile');
-                const file = fileInput.files[0];
+                
+                function searchDocuments() {
+                    const query = document.getElementById('searchQuery').value.toLowerCase();
+                    const documents = JSON.parse(localStorage.getItem('documents')) || [];
 
-                if (!title || !file) {
-                    alert('Title and document file are required!');
-                    toggleLoading(false);
-                    return;
+                    const filteredDocuments = documents.filter(doc =>
+                        doc.title.toLowerCase().includes(query) ||
+                        (doc.tags && doc.tags.toLowerCase().includes(query))
+                    );
+
+                    displaySearchResults(filteredDocuments);
                 }
-
-                const documentData = {
-                    title,
-                    tags,
-                    file: file.name, 
-                    uploadDate: new Date().toLocaleString(),
-                };
-
-                try {
-                    const storedDocuments = JSON.parse(localStorage.getItem('documents')) || [];
-                    storedDocuments.push(documentData);
-                    localStorage.setItem('documents', JSON.stringify(storedDocuments));
-
-                    alert('Document uploaded successfully!');
-                    searchDocuments(); 
-                    document.getElementById('uploadForm').reset(); 
-                } catch (error) {
-                    console.error('Error uploading document:', error);
-                    alert('Failed to upload document!');
-                } finally {
-                    toggleLoading(false);
-                }
-            });
-
-          
-            document.getElementById('searchForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                searchDocuments();
-            });
-
-            
-            function searchDocuments() {
-                const query = document.getElementById('searchQuery').value.toLowerCase();
-                const documents = JSON.parse(localStorage.getItem('documents')) || [];
-
-                const filteredDocuments = documents.filter(doc =>
-                    doc.title.toLowerCase().includes(query) ||
-                    (doc.tags && doc.tags.toLowerCase().includes(query))
-                );
-
-                displaySearchResults(filteredDocuments);
-            }
-        </script>
-    </div>
-</body>
+            </script>
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="../js/firebase-config.js"></script>
+        <script src="../js/authentication.js"></script>
+        <script>checkAuthStatus();</script>
+    </body>
 </html>

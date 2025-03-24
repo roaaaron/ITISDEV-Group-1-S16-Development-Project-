@@ -1,66 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milestone Tracking</title>
-    <link rel="stylesheet" type = "text/css" href="../css/milestone-tracking.css">
-    <script defer src="../js/milestone-tracking.js"></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>FTRoa Construction</h1>
-            <nav>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="index.html">Projects</a>
-                <a href="milestone-tracking.html" class="active">Milestones</a>
-                <a href="expenses.html">Expenses</a>
-                <a href="add.html">Add</a>
-                <a href="upload.html">Upload</a>
-                <a href="report.html">Create Report</a>
-                <a href="user-management.html">Users</a>
-                <a href="#" id="logout">Logout</a>
-            </nav>
-        </header>
-        <main>
-            <section class="milestones">
-                <h2>Milestone Tracking</h2>
-                <label for="project-selector">Select Project:</label>
-                <select id="project-selector">
-                    <!-- Options will be populated dynamically -->
-                </select>
-                <div id="milestone-container">
-                    <!-- Milestone cards will be dynamically generated here -->
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <div id="edit-milestone-modal" class="modal">
-        <div class="modal-content">
-            <span id="close-modal" class="close">&times;</span>
-            <h2>Edit Milestone</h2>
-            <form id="edit-milestone-form">
-                <label for="milestone-title">Title:</label>
-                <input type="text" id="milestone-title" required />
-    
-                <label for="milestone-status">Status:</label>
-                <select id="milestone-status" required>
-                    <option value="Not Started">Not Started</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                </select>
-    
-                <label for="milestone-due-date">Due Date:</label>
-                <input type="date" id="milestone-due-date" required />
-
-                <label for="milestone-comments">Comments:</label>
-                <textarea id="milestone-comments"></textarea>
-    
-                <button type="submit">Save Changes</button>
-            </form>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Milestone Tracking</title>
+        <link rel="stylesheet" type = "text/css" href="../css/milestone-tracking.css">
+        <script defer src="../js/milestone-tracking.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>FTRoa Construction</h1>
+                <nav>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="index.html">Projects</a>
+                    <a href="milestone-tracking.html" class="active">Milestones</a>
+                    <a href="expenses.html">Expenses</a>
+                    <a href="add.html">Add</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="report.html">Create Report</a>
+                    <a href="user-management.html">Users</a>
+                    <a href="#" id="logout">Logout</a>
+                </nav>
+            </header>
+            <main>
+                <section class="milestones">
+                    <h2>Milestone Tracking</h2>
+                    <label for="project-selector">Select Project:</label>
+                    <select id="project-selector">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                    <div id="milestone-container">
+                        <!-- Milestone cards will be dynamically generated here -->
+                    </div>
+                </section>
+            </main>
         </div>
-    </div>
-</body>
+
+        <div id="edit-milestone-modal" class="modal">
+            <div class="modal-content">
+                <span id="close-modal" class="close">&times;</span>
+                <h2>Edit Milestone</h2>
+                <form id="edit-milestone-form">
+                    <label for="milestone-title">Title:</label>
+                    <input type="text" id="milestone-title" required />
+        
+                    <label for="milestone-status">Status:</label>
+                    <select id="milestone-status" required>
+                        <option value="Not Started">Not Started</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+        
+                    <label for="milestone-due-date">Due Date:</label>
+                    <input type="date" id="milestone-due-date" required />
+
+                    <label for="milestone-comments">Comments:</label>
+                    <textarea id="milestone-comments"></textarea>
+        
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="../js/firebase-config.js"></script>
+        <script src="../js/authentication.js"></script>
+        <script>checkAuthStatus();</script>
+    </body>
 </html>

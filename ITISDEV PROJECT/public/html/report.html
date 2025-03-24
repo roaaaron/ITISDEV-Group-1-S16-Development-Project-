@@ -1,74 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Report</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <script defer src="../js/report.js"></script>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>FTRoa Construction</h1>
-            <nav>
-                <a href="dashboard.html">Dashboard</a>
-                <a href="index.html">Projects</a>
-                <a href="milestone-tracking.html">Milestones</a>
-                <a href="expenses.html">Expenses</a>
-                <a href="add.html">Add</a>
-                <a href="upload.html">Upload</a>
-                <a href="report.html" class="active">Create Report</a>
-                <a href="user-management.html">Users</a>
-                <a href="#" id="logout">Logout</a>
-            </nav>
-        </header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Generate Report</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <script defer src="../js/report.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>FTRoa Construction</h1>
+                <nav>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="index.html">Projects</a>
+                    <a href="milestone-tracking.html">Milestones</a>
+                    <a href="expenses.html">Expenses</a>
+                    <a href="add.html">Add</a>
+                    <a href="upload.html">Upload</a>
+                    <a href="report.html" class="active">Create Report</a>
+                    <a href="user-management.html">Users</a>
+                    <a href="#" id="logout">Logout</a>
+                </nav>
+            </header>
 
-        <section class="container">
-            <h2 class="section-title">Generate Report</h2>
-            <div class="report-container">
-                <!-- Left Column: Options -->
-                <div class="report-options">
-                    <h3>Select Project:</h3>
-                    <select id="projectSelect" class="form-input">
-                        <option value="buildingA">Building A</option>
-                        <option value="buildingB">Building B</option>
-                        <option value="buildingC">Building C</option>
-                    </select>
+            <section class="container">
+                <h2 class="section-title">Generate Report</h2>
+                <div class="report-container">
+                    <!-- Left Column: Options -->
+                    <div class="report-options">
+                        <h3>Select Project:</h3>
+                        <select id="projectSelect" class="form-input">
+                            <option value="buildingA">Building A</option>
+                            <option value="buildingB">Building B</option>
+                            <option value="buildingC">Building C</option>
+                        </select>
 
-                    <h3>Select Data to Include:</h3>
-                    <form id="reportForm">
-                        <label>
-                            <input type="checkbox" name="field" value="projectProgress"> Project Progress
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="field" value="budgetUtilization"> Budget Utilization
-                        </label><br>
-                        <label>
-                            <input type="checkbox" name="field" value="milestoneCompletion"> Milestone Completion
-                        </label><br>
-                        <button type="submit" class="form-button">Generate Report</button>
-                    </form>
+                        <h3>Select Data to Include:</h3>
+                        <form id="reportForm">
+                            <label>
+                                <input type="checkbox" name="field" value="projectProgress"> Project Progress
+                            </label><br>
+                            <label>
+                                <input type="checkbox" name="field" value="budgetUtilization"> Budget Utilization
+                            </label><br>
+                            <label>
+                                <input type="checkbox" name="field" value="milestoneCompletion"> Milestone Completion
+                            </label><br>
+                            <button type="submit" class="form-button">Generate Report</button>
+                        </form>
+                    </div>
+
+                    <!-- Right Column: Preview -->
+                    <div class="report-preview">
+                        <h3>Preview for <span id="projectName">[Select Project]</span></h3>
+                        <table id="reportTable">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                        <button id="downloadPdf" class="form-button">Save to PDF</button>
+                    </div>
                 </div>
-
-                <!-- Right Column: Preview -->
-                <div class="report-preview">
-                    <h3>Preview for <span id="projectName">[Select Project]</span></h3>
-                    <table id="reportTable">
-                        <thead>
-                            <tr>
-                                <th>Field</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Rows will be populated by JavaScript -->
-                        </tbody>
-                    </table>
-                    <button id="downloadPdf" class="form-button">Save to PDF</button>
-                </div>
-            </div>
-        </section>
-    </div>
-</body>
+            </section>
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+        <script src="../js/firebase-config.js"></script>
+        <script src="../js/authentication.js"></script>
+        <script>checkAuthStatus();</script>
+    </body>
 </html>
